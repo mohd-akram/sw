@@ -1,5 +1,5 @@
-extern crate gcc;
+extern crate cc;
 
 fn main() {
-    gcc::Build::new().file("src/getppid.c").compile("process");
+    cc::Build::new().file("src/getppid.c").compile("process");
 }

@@ -1,6 +1,5 @@
 extern crate appdirs;
 extern crate clap;
-extern crate time;
 
 use std::env;
 use std::fs;
@@ -8,10 +7,10 @@ use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
 use std::panic;
 use std::path::Path;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use appdirs::user_data_dir;
 use clap::{App, Arg, ArgMatches, SubCommand};
-use time::precise_time_ns;
 
 fn getppid() -> i32 {
     #[link(name = "process", kind = "static")]
@@ -235,7 +234,10 @@ fn process_subcommand(
 }
 
 fn main() {
-    let time = precise_time_ns();
+    let time = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos() as u64;
 
     panic::set_hook(Box::new(|panic_info| {
         let s = panic_info.payload().downcast_ref::<String>().unwrap();
